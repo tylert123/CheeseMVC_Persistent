@@ -56,7 +56,8 @@ namespace CheeseMVC.Controllers
                 {
                     Name = addCheeseViewModel.Name,
                     Description = addCheeseViewModel.Description,
-                    Type = addCheeseViewModel.Type
+                    Type = addCheeseViewModel.Type,
+                    Rating = addCheeseViewModel.Rating
                 };
 
                 CheeseData.Add(newCheese);
@@ -86,23 +87,33 @@ namespace CheeseMVC.Controllers
 
         public IActionResult Edit(int cheeseId)
         {
-            ViewBag.cheese = CheeseData.GetById(cheeseId);
-            return View();
+            //ViewBag.cheese = CheeseData.GetById(cheeseId);
+
+            AddEditCheeseViewModel addEditCheeseViewModel = new AddEditCheeseViewModel();
+            Cheese cheese = CheeseData.GetById(cheeseId);
+
+            addEditCheeseViewModel.CheeseId = cheese.CheeseId;
+            addEditCheeseViewModel.Name = cheese.Name;
+            addEditCheeseViewModel.Description = cheese.Description;
+            addEditCheeseViewModel.Type = cheese.Type;
+
+            return View(addEditCheeseViewModel);
         }
 
         [HttpPost]
-        public IActionResult Edit(int cheeseId, string name, string description)
+        public IActionResult Edit(AddEditCheeseViewModel addEditCheeseViewModel)
         {
-            var id = CheeseData.GetById(cheeseId);
-            CheeseData.Remove(cheeseId);
+            var id = CheeseData.GetById(addEditCheeseViewModel.CheeseId);
+            CheeseData.Remove(addEditCheeseViewModel.CheeseId);
             //var editedCheese = new Cheese(cheeseId, name, description);
             //var editedCheese = new Cheese();
             //CheeseData.Add(Cheese editedCheese);
             Cheese editedCheese = new Cheese
             {
-                Name = name,
-                Description = description,
-                CheeseId = cheeseId
+                Name = addEditCheeseViewModel.Name,
+                Description = addEditCheeseViewModel.Description,
+                CheeseId = addEditCheeseViewModel.CheeseId,
+                Type = addEditCheeseViewModel.Type
             };
             CheeseData.Add(editedCheese);
 
