@@ -52,13 +52,15 @@ namespace CheeseMVC.Controllers
             if (ModelState.IsValid)
             {
 
-                Cheese newCheese = new Cheese
+                /*Cheese newCheese = new Cheese
                 {
                     Name = addCheeseViewModel.Name,
                     Description = addCheeseViewModel.Description,
                     Type = addCheeseViewModel.Type,
                     Rating = addCheeseViewModel.Rating
-                };
+                };*/
+
+                var newCheese = addCheeseViewModel.CreateCheese();
 
                 CheeseData.Add(newCheese);
 
@@ -96,6 +98,7 @@ namespace CheeseMVC.Controllers
             addEditCheeseViewModel.Name = cheese.Name;
             addEditCheeseViewModel.Description = cheese.Description;
             addEditCheeseViewModel.Type = cheese.Type;
+            addEditCheeseViewModel.Rating = cheese.Rating;
 
             return View(addEditCheeseViewModel);
         }
@@ -113,7 +116,8 @@ namespace CheeseMVC.Controllers
                 Name = addEditCheeseViewModel.Name,
                 Description = addEditCheeseViewModel.Description,
                 CheeseId = addEditCheeseViewModel.CheeseId,
-                Type = addEditCheeseViewModel.Type
+                Type = addEditCheeseViewModel.Type,
+                Rating = addEditCheeseViewModel.Rating
             };
             CheeseData.Add(editedCheese);
 
