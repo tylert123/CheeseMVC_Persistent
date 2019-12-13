@@ -11,7 +11,10 @@ namespace CheeseMVC.Models
         public string Description { get; set; }
         public CheeseType Type { get; set; }
         public int Rating { get; set; }
-        public int CheeseId { get; set; }
+        public int ID { get; set; }
+        //public int CheeseID {get;set;} also allowed
+
+        /*public int CheeseId { get; set; }
         private static int nextId = 1;
 
         /* Below not needed with short hand used in Controller
@@ -21,9 +24,9 @@ namespace CheeseMVC.Models
             Description = description;
         }*/
 
-        public Cheese() {
+        /*public Cheese() {
             CheeseId = nextId;
             nextId++;
-        }
+        }*/
     }
 }

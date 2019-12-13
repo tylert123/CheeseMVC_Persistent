@@ -16,6 +16,10 @@
         <label asp-for="Type"></label>
         <select asp-for="Type" asp-items="Model.CheeseTypes"></select>
     </div>
+    <div class="form-group">
+        <label asp-for="Rating"></label>
+        <input asp-for="Rating" value="@Model.Rating" type="number" />
+    </div>
 
     <input type="hidden" value="@Model.CheeseId" asp-for="CheeseId" />
 
