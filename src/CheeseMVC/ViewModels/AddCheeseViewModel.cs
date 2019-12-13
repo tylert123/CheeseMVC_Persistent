@@ -25,6 +25,11 @@ namespace CheeseMVC.ViewModels
 
         public List<SelectListItem> CheeseTypes { get; set; }
 
+        //public CreateCheese()
+        //{
+            
+        //}
+
         public AddCheeseViewModel()
         {
             CheeseTypes = new List<SelectListItem>();
@@ -46,19 +51,5 @@ namespace CheeseMVC.ViewModels
                 Text = CheeseType.Fake.ToString(),
             });
         }
-        public Cheese CreateCheese()
-        {
-            Cheese newCheese = new Cheese
-            {
-                Name = this.Name,
-                Description = this.Description,
-                Type = this.Type,
-                Rating = this.Rating
-            };
-
-            return newCheese;
-
-        }
-
     }
 }
