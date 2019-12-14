@@ -1,4 +1,4 @@
-@model List<CheeseMVC.Models.Cheese>
+@model IList<CheeseMVC.Models.Cheese>
 
 <h1>@ViewBag.Title</h1>
 
@@ -12,7 +12,7 @@
     <tr>
         <th>Name</th>
         <th>Description</th>
-        <th>Type</th>
+        <th>Category</th>
         <th>Rating</th>
     </tr>
 
@@ -21,7 +21,7 @@
         <tr>
             <td>@cheese.Name</td>
             <td>@cheese.Description</td>
-            <td>@cheese.Type</td>
+            <td>@cheese.Category.Name</td>
             <td>@cheese.Rating</td>
             <td><a asp-controller="Cheese" asp-action="Edit" asp-route-cheeseId="@cheese.ID">Edit</a></td>
         </tr>

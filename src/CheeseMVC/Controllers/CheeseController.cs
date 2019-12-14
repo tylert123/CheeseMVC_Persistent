@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using CheeseMVC.Models;
 using CheeseMVC.ViewModels;
 using CheeseMVC.Data;
+using Microsoft.EntityFrameworkCore;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -25,14 +26,16 @@ namespace CheeseMVC.Controllers
         {
             //ViewBag.cheeses = CheeseData.GetAll();
 
-            List<Cheese> cheeses = context.Cheeses.ToList();
+            //List<Cheese> cheeses = context.Cheeses.ToList(); Replaced by below
+
+            IList<Cheese> cheeses = context.Cheeses.Include(c => c.Category).ToList();
 
             return View(cheeses);
         }
 
         public IActionResult Add()
         {
-            AddCheeseViewModel addCheeseViewModel = new AddCheeseViewModel();
+            AddCheeseViewModel addCheeseViewModel = new AddCheeseViewModel(context.Categories.ToList());
 
             return View(addCheeseViewModel);
         }
@@ -59,12 +62,13 @@ namespace CheeseMVC.Controllers
 
             if (ModelState.IsValid)
             {
+                CheeseCategory newCheeseCategory = context.Categories.Single(c => c.ID == addCheeseViewModel.CategoryID);
 
                 Cheese newCheese = new Cheese
                 {
                     Name = addCheeseViewModel.Name,
                     Description = addCheeseViewModel.Description,
-                    Type = addCheeseViewModel.Type,
+                    Category = newCheeseCategory,
                     Rating = addCheeseViewModel.Rating
                 };
 
@@ -102,13 +106,14 @@ namespace CheeseMVC.Controllers
         {
             //ViewBag.cheese = CheeseData.GetById(cheeseId);
 
-            AddEditCheeseViewModel addEditCheeseViewModel = new AddEditCheeseViewModel();
+            AddEditCheeseViewModel addEditCheeseViewModel = new AddEditCheeseViewModel(context.Categories.ToList());
             Cheese cheese = context.Cheeses.Single(c => c.ID == cheeseId);
+            CheeseCategory newCheeseCategory = context.Categories.Single(c => c.ID == cheese.CategoryID);
 
             addEditCheeseViewModel.CheeseId = cheese.ID;
             addEditCheeseViewModel.Name = cheese.Name;
             addEditCheeseViewModel.Description = cheese.Description;
-            addEditCheeseViewModel.Type = cheese.Type;
+            addEditCheeseViewModel.CategoryID = cheese.Category.ID;
             addEditCheeseViewModel.Rating = cheese.Rating;
 
             return View(addEditCheeseViewModel);
@@ -117,7 +122,9 @@ namespace CheeseMVC.Controllers
         [HttpPost]
         public IActionResult Edit(AddEditCheeseViewModel addEditCheeseViewModel)
         {
-            var id = context.Cheeses.Single(c => c.ID == addEditCheeseViewModel.CheeseId);
+            var id = context.Cheeses.FirstOrDefault(c => c.ID == addEditCheeseViewModel.CheeseId);
+            CheeseCategory newCheeseCategory = context.Categories.Single(c => c.ID == addEditCheeseViewModel.CategoryID);
+
             //var editedCheese = new Cheese(cheeseId, name, description);
             //var editedCheese = new Cheese();
             //CheeseData.Add(Cheese editedCheese);
@@ -128,15 +135,33 @@ namespace CheeseMVC.Controllers
             //    CheeseId = addEditCheeseViewModel.CheeseId,
             //    Type = addEditCheeseViewModel.Type
             //};
+            if (id != null) {
+                id.Name = addEditCheeseViewModel.Name;
+                id.Description = addEditCheeseViewModel.Description;
+                id.Category = newCheeseCategory;
+                id.Rating = addEditCheeseViewModel.Rating;
 
-            id.Name = addEditCheeseViewModel.Name;
-            id.Description = addEditCheeseViewModel.Description;
-            id.Type = addEditCheeseViewModel.Type;
-            id.Rating = addEditCheeseViewModel.Rating;
+                context.Cheeses.Update(id);
 
-            context.SaveChanges();
-
+                context.SaveChanges();
+            }
             return Redirect("/");
+        }
+
+        public IActionResult Category(int id)
+        {
+            if(id == 0)
+            {
+                return Redirect("/Category");
+            }
+
+            CheeseCategory theCategory = context.Categories
+                .Include(cat => cat.Cheeses)
+                .Single(cat => cat.ID == id);
+
+            ViewBag.title = "Cheeses in category: " + theCategory.Name;
+
+            return View("Index", theCategory.Cheeses);
         }
     }
 }
