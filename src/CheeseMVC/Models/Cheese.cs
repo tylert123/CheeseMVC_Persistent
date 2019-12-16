@@ -14,6 +14,9 @@ namespace CheeseMVC.Models
 
         public int CategoryID { get; set; }
         public CheeseCategory Category { get; set; }
+
+        public IList<CheeseMenu> CheeseMenus { get; set; }
+
         //public CheeseType Type { get; set; } Replaced by the above
 
         //public int CheeseID {get;set;} also allowed

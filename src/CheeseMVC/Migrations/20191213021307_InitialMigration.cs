@@ -18,7 +18,7 @@ namespace CheeseMVC.Migrations
                     Description = table.Column<string>(nullable: true),
                     Name = table.Column<string>(nullable: true),
                     Rating = table.Column<int>(nullable: false),
-                    //Type = table.Column<int>(nullable: false)
+                    Type = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
